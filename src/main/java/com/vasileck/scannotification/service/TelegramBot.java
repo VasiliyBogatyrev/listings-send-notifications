@@ -75,7 +75,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     public void sendResult(ResultEvent resultEvent) {
         StringBuilder resultMessage = new StringBuilder();
         resultEvent.getResult()
-                .forEach((key, value) -> resultMessage.append(key).append(", url: ").append(value).append("\n"));
+                .forEach((key, value) -> resultMessage.append("id:").append(key).append(", ").append(value).append("\n"));
         sendMsg(resultEvent.getChatId(), "The search new results from " + resultEvent.getMessage() + "\n" + resultMessage);
     }
 

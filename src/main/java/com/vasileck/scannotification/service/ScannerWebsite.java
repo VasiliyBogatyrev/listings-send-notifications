@@ -53,8 +53,13 @@ public class ScannerWebsite {
                 found.forEach(e -> {
                     String id = e.attributes().get("data-testid").replace("search-result_listing_", "");
                     if (!foundResults.contains(id)) {
-                        String urlResult = "test";
-                        newResult.put(id, urlResult);
+                        Elements details = e
+                                .getElementsByAttributeValueContaining("data-testid", "listing-details-link");
+                        Elements priceElement = details.get(0)
+                                .getElementsByAttributeValueContaining("data-testid", "listing-price");
+                        String price = "test";
+                        String listingUrl = "test";
+                        newResult.put(id, "price: " + price + " url: " + listingUrl);
                         foundResults.add(id);
                     }
                 });
