@@ -19,8 +19,6 @@ target/
 *.iml
 *.ipr
 
-#Config
-*/application.yaml
 
 ### NetBeans ###
 /nbproject/private/
@@ -34,3 +32,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+#### Configs ###
+/src/main/resources/application.yaml
