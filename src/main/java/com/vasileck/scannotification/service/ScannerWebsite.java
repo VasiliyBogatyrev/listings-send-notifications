@@ -39,6 +39,7 @@ public class ScannerWebsite {
 
     @Async
     public void startSearch(Long chatId, String url) {
+        String[] splitUrl = url.split("/");
         stopWork.put(chatId, false);
         Set<String> foundResults = new HashSet<>();
         try {
@@ -57,8 +58,8 @@ public class ScannerWebsite {
                                 .getElementsByAttributeValueContaining("data-testid", "listing-details-link");
                         Elements priceElement = details.get(0)
                                 .getElementsByAttributeValueContaining("data-testid", "listing-price");
-                        String price = "test";
-                        String listingUrl = "test";
+                        String price = priceElement.get(0).getElementsByTag("p").get(0).text();
+                        String listingUrl = splitUrl[0] + "//" + splitUrl[2] + details.get(0).attributes().get("href");
                         newResult.put(id, "price: " + price + " url: " + listingUrl);
                         foundResults.add(id);
                     }
