@@ -71,6 +71,7 @@ public class ScannerWebsite {
             }
             while (!stopWork.getOrDefault(chatId, true));
             log.info("Stop method for {}", chatId);
+            applicationEventMulticaster.multicastEvent(new ErrorEvent(chatId, "Search was stopped"));
         } catch (Exception e) {
             applicationEventMulticaster.multicastEvent(new ErrorEvent(chatId, e.getMessage()));
         }

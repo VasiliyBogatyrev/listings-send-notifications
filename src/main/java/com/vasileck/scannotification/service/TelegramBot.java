@@ -14,6 +14,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import javax.annotation.PreDestroy;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -53,20 +54,27 @@ public class TelegramBot extends TelegramLongPollingBot {
 //        }
         Message requestMessage = update.getMessage();
         if (requestMessage.getText().contains("/start")) {
+            sendMsg(chatId, """
+                    Список команд:
+                    /search <url_web_site> - для старта поиска
+                    /stop - для остановки поиска""");
+        } else if (requestMessage.getText().contains("/stop")) {
+            scannerWebsite.stopSearch(chatId);
+        } else if (requestMessage.getText().contains("/search")) {
             String[] texts = requestMessage.getText().split(" ");
             if (texts.length == 2) {
                 scannerWebsite.startSearch(chatId, texts[1]);
                 sendMsg(chatId, "Начат поиск");
+            } else if (texts.length < 2) {
+                sendMsg(chatId, "Не смог распознать URL, адресс для поиска не указан");
             } else {
-                sendMsg(chatId, "Не смог распознать URL, в адресе есть пробел");
+                sendMsg(chatId, "Не смог распознать URL, в адресе есть пробелы");
             }
-        } else if (requestMessage.getText().contains("/stop")) {
-            scannerWebsite.stopSearch(chatId);
         } else {
             sendMsg(chatId, """
                     Я не понял команды, список команд:
-                    /start url_web_site  для старта поиска
-                    /stop для остановки поиска""");
+                    /search <url_web_site> - для старта поиска
+                    /stop - для остановки поиска""");
 
         }
     }
@@ -85,6 +93,11 @@ public class TelegramBot extends TelegramLongPollingBot {
         log.error(msg);
         sendMsg(errorEvent.getChatId(), errorEvent.getMessage());
         activeChatId.remove(errorEvent.getChatId());
+    }
+
+    @PreDestroy
+    public void doSomethingAfterStartup() {
+        activeChatId.forEach(chatId -> sendMsg(chatId, "Server to searching was by stopped"));
     }
 
     private void sendMsg(Long chatId, String msg) {
